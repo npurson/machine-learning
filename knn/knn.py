@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 
+
 class Knn(object):
     def __init__(self, k=3):
         self.k = k
