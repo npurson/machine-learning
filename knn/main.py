@@ -1,4 +1,3 @@
-#%%
 import os
 import numpy as np
 from knn import Knn
@@ -25,7 +24,9 @@ def main():
     knn.fit(x_train, y_train)
     y_pred = knn.predict(x_test)
     correct = sum((y_test - y_pred) == 0)
-    print('correct:', correct, 'total:', len(x_test))
+    print('==> correct:', correct)
+    print('==> total:', len(x_test))
+    print('==> acc:', correct / len(x_test))
     os.system("pause")
 
 if __name__ == '__main__':
