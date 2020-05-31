@@ -1,25 +1,26 @@
 import numpy as np
 
+
 class Perceptron(object):
-    """Perceptron classifier.
+    """ Perceptron classifier.
 
     Parameters
     ----------
     eta : float
-      Learning rate (between 0.0 and 1.0)
+        Learning rate (between 0.0 and 1.0)
     n_iter : int
-      Passes over the training dataset.
+        Passes over the training dataset.
     random_state : int
-      Random number generator seed for random weight initialization.
+        Random number generator seed for random weight initialization.
 
     Attributes
     ----------
     w_ : 1d-array
-      Weights after fitting.
+        Weights after fitting.
     errors_ : list
-      Number of misclassification (updates) in each epoch.
-
+        Number of misclassification (updates) in each epoch.
     """
+
     def __init__(self, eta=0.01, n_iter=50, random_state=1):
         self.eta = eta
         self.n_iter = n_iter
@@ -31,16 +32,16 @@ class Perceptron(object):
         Parameters
         ----------
         X : {array-like}, shape = [n_samples, n_features]
-          Training vectors, where n_samples is the number of samples and
-          n_feature is the number of features.
+            Training vectors, where n_samples is the number of samples and
+            n_feature is the number of features.
         y : array-like, shape = [n_samples]
-          Target values.
+            Target values.
 
         Returns
         ----------
         self : object
-
         """
+
         rgen = np.random.RandomState(self.random_state)
         self.w_ = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.errors_ = []

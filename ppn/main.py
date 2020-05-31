@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def main():
     df = pd.read_csv('https://archive.ics.uci.edu/ml/'
-                    'machine-learning-databases/iris/iris.data', header=None)
+                     'machine-learning-databases/iris/iris.data', header=None)
     df.tail()
 
     X = df.iloc[0:100, [0, 2]].values

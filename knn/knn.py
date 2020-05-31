@@ -3,17 +3,18 @@ from tqdm import tqdm
 
 
 class Knn(object):
+
     def __init__(self, k=3):
         self.k = k
 
-    def fit(self, x, y):
-        self.x = x
+    def fit(self, X, y):
+        self.X = X
         self.y = y
 
-    def predict(self, xs):
+    def predict(self, X):
         y_pred = []
-        for x in tqdm(xs):
-            dist = [np.sum((xi - x) ** 2) for xi in self.x]
+        for x in tqdm(X):
+            dist = [np.sum((xi - x) ** 2) for xi in self.X]
             topk = self.y[np.argsort(dist)[:self.k]]            # the top k nearest ys
             y_pred.append(np.argmax(np.bincount(topk)))         # append the most frequent label in topk
         return y_pred
