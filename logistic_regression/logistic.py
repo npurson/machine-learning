@@ -43,7 +43,6 @@ class LogisticRegression(object):
             rgen = np.random.RandomState(self.random_state)
             self.w_ = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
 
-        # self.epoch_ = []
         # self.cost_ = []
         # self.acc_ = []
         # self.lr_ = []
@@ -64,7 +63,6 @@ class LogisticRegression(object):
 
             # cost = (-y.dot(np.log(output)) - (1 - y).dot(np.log(1 - output + 1e-4)))
             # acc = accuracy_score(y, y_pred)
-            # self.epoch_.append(i)
             # self.lr_.append(self.eta)
             # self.cost_.append(cost)
             # self.acc_.append(acc)
