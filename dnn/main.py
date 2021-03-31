@@ -11,7 +11,7 @@ n_features = 28 * 28
 n_classes = 10
 n_epochs = 10
 bs = 1000
-eta = 1e-5
+eta = 1e-3
 reg_lambda = 0
 lengths = (n_features, 512, 512, n_classes)
 
@@ -30,6 +30,7 @@ def main():
     trainloader = nn.data.DataLoader(load_mnist('train'), batch=bs)
     testloader = nn.data.DataLoader(load_mnist('test'))
     model = DNN(lengths)
+    optimizer = nn.optim.SGD(momentum=0.9)
     criterion = F.CrossEntropyLoss(n_classes=n_classes)
 
     for i in range(n_epochs):
@@ -37,14 +38,13 @@ def main():
         bar.set_description(f'epoch {i:2}')
         for X, y in bar:
             probs = model.forward(X)
-            model.backward(probs - np.eye(n_classes)[y], eta, reg_lambda)
+            delta = optimizer.step(probs - np.eye(n_classes)[y])
+            model.backward(delta, eta, reg_lambda)
             preds = np.argmax(probs, axis=1)
             bar.set_postfix_str(f'acc={np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
 
         for X, y in testloader:
-            probs = model.forward(X)
-            model.backward(probs - np.eye(n_classes)[y], eta, reg_lambda)
-            preds = np.argmax(probs, axis=1)
+            preds = model.predict(X)
             print(f'test acc: {np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
 
 
