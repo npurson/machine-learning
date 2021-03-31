@@ -1,29 +1,51 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from tqdm import tqdm
 
-from dnn import DNN
-from dnn import functional as F
+import nn
+import nn.functional as F
+from nn.model import DNN
 
 
-n_samples = 100
-n_features = 2
-n_classes = 2
-n_iters = 300
-eta = 5e-2
+n_features = 28 * 28
+n_classes = 10
+n_epochs = 10
+bs = 1000
+eta = 1e-5
 reg_lambda = 0
-lengths = (n_features, 100, 100, n_classes)
+lengths = (n_features, 512, 512, n_classes)
+
+
+def load_mnist(mode='train', n_samples=None):
+    images = './train-images-idx3-ubyte' if mode == 'train' else './t10k-images-idx3-ubyte'
+    labels = './train-labels-idx1-ubyte' if mode == 'train' else './t10k-labels-idx1-ubyte'
+    length = 60000 if mode == 'train' else 10000
+
+    X = np.fromfile(open(images), np.uint8)[16:].reshape((length, 28, 28)).astype(np.int32)
+    y = np.fromfile(open(labels), np.uint8)[8:].reshape((length)).astype(np.int32)
+    return (X[:n_samples].reshape(n_samples, -1), y[:n_samples]) if n_samples is not None else (X.reshape(length, -1), y)
 
 
 def main():
-    X, y = []
-    nn = DNN(lengths)
+    trainloader = nn.data.DataLoader(load_mnist('train'), batch=bs)
+    testloader = nn.data.DataLoader(load_mnist('test'))
+    model = DNN(lengths)
     criterion = F.CrossEntropyLoss(n_classes=n_classes)
 
-    for i in range(n_iters):
-        probs = nn.forward(X)
-        nn.backward(probs - np.eye(n_classes)[y], eta, reg_lambda)
-        preds = np.argmax(probs, axis=1)
-        print(f'iter {i}: acc={np.sum(preds == y) / len(y)}, loss={criterion(preds, y)}')
+    for i in range(n_epochs):
+        bar = tqdm(trainloader, total=6e4 / bs)
+        bar.set_description(f'epoch {i:2}')
+        for X, y in bar:
+            probs = model.forward(X)
+            model.backward(probs - np.eye(n_classes)[y], eta, reg_lambda)
+            preds = np.argmax(probs, axis=1)
+            bar.set_postfix_str(f'acc={np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
+
+        for X, y in testloader:
+            probs = model.forward(X)
+            model.backward(probs - np.eye(n_classes)[y], eta, reg_lambda)
+            preds = np.argmax(probs, axis=1)
+            print(f'test acc: {np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
 
 
 if __name__ == '__main__':

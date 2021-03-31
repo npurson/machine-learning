@@ -1,15 +1,9 @@
 import numpy as np
 
-from . import nn
+from .module import Module
 
 
-class Softmax(nn.Module):
-    def forward(self, x):
-        exps = np.exp(x)
-        return exps / np.sum(exps, axis=1, keepdims=True)
-
-
-class Sigmoid(nn.Module):
+class Sigmoid(Module):
     def forward(self, x):
         self.y = 1 / (1 + np.exp(-x))
         return self.y
@@ -18,7 +12,7 @@ class Sigmoid(nn.Module):
         return self.y * (1 - self.y)
 
 
-class Tanh(nn.Module):
+class Tanh(Module):
     def forward(self, x):
         self.x = x
         return np.tanh(x)
@@ -27,16 +21,16 @@ class Tanh(nn.Module):
         return delta * (1 - self.x ** 2)
 
 
-class ReLU(nn.Module):
+class ReLU(Module):
     def forward(self, x):
         self.x = x
         return np.maximum(x, 0)
 
     def backward(self, delta, eta, **kwargs):
-        return np.where(self.x > 0, self.x, 0)
+        return np.where(self.x > 0, delta, 0)
 
 
-class LeakyReLU(nn.Module):
+class LeakyReLU(Module):
     def forward(self, x):
         self.x = x
         ...
@@ -45,18 +39,10 @@ class LeakyReLU(nn.Module):
         ...
 
 
-class ELU(nn.Module):
+class ELU(Module):
     def forward(self, x):
         self.x = x
         ...
 
     def backward(self, delta, eta, **kwargs):
         ...
-
-
-class CrossEntropyLoss(object):
-    def __init__(self, n_classes):
-        self.n_classes = n_classes
-
-    def __call__(self, preds, targets):
-        return -np.sum(np.eye(self.n_classes)[targets] * np.eye(self.n_classes)[preds])
