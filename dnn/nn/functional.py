@@ -14,5 +14,5 @@ class CrossEntropyLoss(object):
     def __init__(self, n_classes):
         self.n_classes = n_classes
 
-    def __call__(self, preds, targets):
-        return -np.sum(np.eye(self.n_classes)[targets] * np.eye(self.n_classes)[preds])
+    def __call__(self, probs, targets):
+        return -np.sum(np.eye(self.n_classes)[targets] * np.log(probs))  # + (1 - np.eye(self.n_classes)[targets]) * np.log(1 - probs))

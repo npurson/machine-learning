@@ -41,11 +41,25 @@ def main():
             delta = optimizer.step(probs - np.eye(n_classes)[y])
             model.backward(delta, eta, reg_lambda)
             preds = np.argmax(probs, axis=1)
-            bar.set_postfix_str(f'acc={np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
+            bar.set_postfix_str(f'acc={np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(probs, y):.3f}')
 
         for X, y in testloader:
             preds = model.predict(X)
-            print(f'test acc: {np.sum(preds == y) / len(y) * 100:.1f}')  # loss={criterion(preds, y)}')
+            print(f'test acc: {np.sum(preds == y) / len(y) * 100:.1f}')
+
+        # if i % 5 == 0:
+        #     X, y = load_mnist('test', 20)
+        #     pred = model.predict(X)
+        #     fig = plt.subplots(nrows=4, ncols=5, sharex='all', sharey='all')[1].flatten()
+        #     for i in range(20):
+        #         img = X[i].reshape(28, 28)
+        #         fig[i].set_title(pred[i])
+        #         fig[i].imshow(img, cmap='Greys', interpolation='nearest')
+        #     fig[0].set_xticks([])
+        #     fig[0].set_yticks([])
+        #     plt.tight_layout()
+        #     plt.savefig("vis.png")
+        #     plt.show()
 
 
 if __name__ == '__main__':
