@@ -1,4 +1,4 @@
-# machine-learning
+# Machine Learning
 
 Naive implementations of machine learning algorithms.
 
