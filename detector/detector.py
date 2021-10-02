@@ -1,10 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.modules.activation import ReLU
-from torch.nn.modules.batchnorm import BatchNorm1d
-from torch.nn.modules.container import Sequential
-
 import resnet
 
 
@@ -33,10 +29,21 @@ class Detector(nn.Module):
     def __init__(self, backbone, lengths, num_classes):
         super(Detector, self).__init__()
         self.backbone = getattr(resnet, backbone)(pretrained=True)
+
+        # TODO Design the rest of the detector.
+
         self.box_head = BoxHead(lengths, num_classes)
 
+        # End of todo
+
     def forward(self, x):
+
+        # TODO Implement forward propogation
+        # of the detector.
+
         x = self.backbone(x)        # B, 2048, 4, 4
         x = x.flatten(1)
         logits, bbox = self.box_head(x)
         return logits, bbox
+
+        # End of todo

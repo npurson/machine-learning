@@ -68,5 +68,6 @@ def main():
         train_epoch(model, trainloader, criterion, optimizer, scheduler, epoch + 1, device)
         test_epoch(model, testloader, device)
 
+
 if __name__ == '__main__':
     main()

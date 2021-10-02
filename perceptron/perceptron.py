@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class Perceptron(object):
-    """ Perceptron classifier.
+    """Perceptron classifier.
 
     Parameters
     ----------

@@ -2,10 +2,11 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from naive_bayes import NaiveBayes
-from load_data import load_mails_dataset
 import matplotlib.pyplot as plt
 import numpy as np
+
+from naive_bayes import NaiveBayes
+from load_data import load_mails_dataset
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
 
     # print topk frequent tokens in spam letters
     tokens = np.asanyarray(vectorizer.get_feature_names())
-    token_vector =  np.eye(tokens.shape[0])
+    token_vector = np.eye(tokens.shape[0])
     topk_index = np.argsort(clf.predict_proba(token_vector)[:, 1])[:10]
     print(tokens[topk_index])
 

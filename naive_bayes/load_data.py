@@ -25,8 +25,8 @@ def load_mails_dataset(dir):
 
 
 def load_csv(file):
-    pass
+    ...
 
 
 def load_weibo_dataset(dir):
-    pass
+    ...

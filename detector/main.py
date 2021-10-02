@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from torch.utils import data
 from tqdm import tqdm
 
-from data import TvidDataset
-from model import Detector
+from tvid import TvidDataset
+from detector import Detector
 from utils import compute_iou
 
 
@@ -32,7 +32,7 @@ def train_epoch(model, dataloader, criterion: dict, optimizer, scheduler, epoch,
 
         correct += sum((torch.argmax(logits, axis=1) == gt_cls).cpu().detach().numpy() & (compute_iou(bbox.cpu(), gt_bbox.cpu()) > iou_thr))
         total += len(X)
-        bar.set_postfix_str(f'lr={scheduler.get_last_lr()[0]:.4f} ap={correct / total * 100:.2f} loss={loss.item():.2f}')
+        bar.set_postfix_str(f'lr={scheduler.get_last_lr()[0]:.4f} acc={correct / total * 100:.2f} loss={loss.item():.2f}')
     scheduler.step()
 
 
@@ -46,7 +46,7 @@ def test_epoch(model, dataloader, device, epoch):
             correct += sum((torch.argmax(logits, axis=1) == gt_cls).cpu().detach().numpy() & (compute_iou(bbox.cpu(), gt_bbox.cpu()) > iou_thr))
             correct_cls += sum((torch.argmax(logits, axis=1) == gt_cls))
             total += len(X)
-        print(f' test ap: {correct / total * 100:.2f}  acc: {correct_cls / total * 100:.2f}')
+        print(f' val acc: {correct / total * 100:.2f}')
 
 
 def main():
@@ -60,6 +60,7 @@ def main():
     for epoch in range(epochs):
         train_epoch(model, trainloader, criterion, optimizer, scheduler, epoch, device)
         test_epoch(model, testloader, device, epoch)
+
 
 if __name__ == '__main__':
     main()
